@@ -1,12 +1,22 @@
 package be.he2b.starship
 
 class Planet(name : String, coordinates: Coordinates,
-             metalResources: Int, exploratioRate : Int){
+             metalResources: Int, exploratioRate : Int)
+    : SpaceObject(coordinates, name)
+{
 
-    val name : String = name
-    var coordinates : Coordinates = coordinates
+    override val name : String = name
+    override var coordinates : Coordinates = coordinates
     var metalResources : Int = metalResources
     val exploratioRate : Int = exploratioRate
+
+    fun mine() : Int{
+        val metalMine = metalResources
+        metalResources = 0
+        return metalMine
+    }
+
+
 
 
 }
