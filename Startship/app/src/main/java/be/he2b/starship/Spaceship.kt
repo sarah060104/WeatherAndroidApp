@@ -1,24 +1,22 @@
 package be.he2b.starship
 
 class Spaceship(startLocation : Planet){
-    var location : Planet = startLocation
-        private set //??
+    var location : SpaceObject = startLocation
+        private set
     var fuel = 50.0
-        private set //??
+        private set
     var metalCargo = 0
 
     fun move(destination: SpaceObject){
         val distancePlanets : Double = this.location.coordinates.distanceTo(
             destination.coordinates)
-        if (fuel <distancePlanets/10){
-            println("Not enough fuel to go planet ${destination.name}")
-        } else{
-            changeCoordinates(destination)
-            this.fuel = fuel - distancePlanets/10
+        val requiredFuel = distancePlanets/10
+        if (fuel<requiredFuel){
+            throw Exception("Not enough fuel")
         }
-    }
-    fun changeCoordinates(destination: SpaceObject){
-        this.location.coordinates = destination.coordinates
+        fuel -= requiredFuel
+
+        location = destination
     }
 
     fun refuel(quantity : Double){
@@ -31,8 +29,10 @@ class Spaceship(startLocation : Planet){
     /**
      * gather metal resources from planet
      */
-    fun mine(){
-        metalCargo = metalCargo + location.metalResources
+    fun gatherMetal(){
+        if (location is Planet) {
+            metalCargo += (location as Planet).mine()
+        }
     }
 
 }

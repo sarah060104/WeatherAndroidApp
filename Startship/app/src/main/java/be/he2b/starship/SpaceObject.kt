@@ -7,13 +7,12 @@ abstract class SpaceObject (
      * class to give each type of space object a common caracteristic
      */
 
-    open val name: String
+    val name: String = _nameObject
         get(){
-            if(name.isEmpty()){
-                return "Object unknown"
-            }
-            else {
-                return name
-            }
+            if (field.isEmpty()) {
+                throw Exception("No name")
+            } else {
+                return field
+            }//attention name.isEmpty() va appeler le getter pour prendre le nom, à l'infini, stackoveerflow
         }
 }
