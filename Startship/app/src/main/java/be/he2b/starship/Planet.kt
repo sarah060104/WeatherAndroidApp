@@ -10,7 +10,7 @@ class Planet(name : String, coordinates: Coordinates,
     var metalResources : Int = metalResources
     val exploratioRate : Int = exploratioRate
 
-    fun mine() : Int{
+    fun getResourceTaken() : Int{
         val metalMine = metalResources
         metalResources = 0
         return metalMine

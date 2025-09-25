@@ -11,12 +11,12 @@ fun main() {
 
     val spaceship = Spaceship(planet0)
     try {
-        var minedMetal = planet0.mine()
+        var minedMetal = planet0.getResourceTaken()
         spaceship.metalCargo += minedMetal
 // move to Mars
         spaceship.move(planet1)
 // extract some metal form Mars
-        minedMetal = planet1.mine()
+        minedMetal = planet1.getResourceTaken()
         spaceship.metalCargo += minedMetal
 // move to the space station
         spaceship.move(station)

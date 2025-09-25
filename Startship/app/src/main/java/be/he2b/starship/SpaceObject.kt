@@ -2,9 +2,9 @@ package be.he2b.starship
 
 abstract class SpaceObject (
     open val coordinates : Coordinates,
-    private val nameObject: String){
+    private val _nameObject: String){
     /**
-     * classe pour donner carac commune à objet dans espace
+     * class to give each type of space object a common caracteristic
      */
 
     open val name: String

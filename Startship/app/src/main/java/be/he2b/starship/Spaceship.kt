@@ -15,7 +15,6 @@ class Spaceship(startLocation : Planet){
         } else{
             changeCoordinates(destination)
             this.fuel = fuel - distancePlanets/10
-            println("Fuel quantity left : $fuel L")
         }
     }
     fun changeCoordinates(destination: SpaceObject){
@@ -26,7 +25,14 @@ class Spaceship(startLocation : Planet){
         if (quantity > 0) {
             fuel += quantity
         }
-        println("refuel : + $fuel L")
+    }
+
+
+    /**
+     * gather metal resources from planet
+     */
+    fun mine(){
+        metalCargo = metalCargo + location.metalResources
     }
 
 }
