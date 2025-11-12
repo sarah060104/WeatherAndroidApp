@@ -52,6 +52,8 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.16")
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
