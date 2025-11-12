@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "connect",
+                        startDestination = AppScreen.Connection.name,
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable(route = AppScreen.Connection.name) {
