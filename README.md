@@ -4,11 +4,11 @@ Ce dépôt contient les sources du projet WeatherApp.
 
 ## Description
 
-L'application permet de consulter la météo. Elle peut aussi afficher une prévision des prochains jours, le nombre de jours est décidé par l'utilisateur. Il peut choisir le nom d'une ville à ajouter ou activer la géolocalisation
+L'application permet de consulter la météo. Elle peut aussi afficher une prévision des prochains jours, le nombre de jours est décidé par l'utilisateur. Il peut choisir le nom d'une ville à ajouter ou activer la géolocalisation pour afficher directement les prévisions de la ville où on se trouve.
 
 ## Service rest
 
-Pour collecter les données relatives à la météo, l'API open météo est utilisé.
+Pour collecter les données relatives à la météo, l'API open meteo est utilisé.
 
 ## Traduction
 
