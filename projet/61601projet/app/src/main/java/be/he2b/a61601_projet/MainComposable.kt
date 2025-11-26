@@ -2,6 +2,7 @@ package be.he2b.a61601_projet
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +32,9 @@ import be.he2b.a61601_projet.ui.theme._61601projetTheme
 
 @Composable
 fun HomeScreen() {
-    Box(Modifier.fillMaxSize().background(color = Color.White),
+    Box(Modifier
+        .fillMaxSize()
+        .background(color = Color.White),
         contentAlignment = Alignment.Center) {
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -58,7 +61,9 @@ fun ConnectingRoute(
         isError = state.isError,
         errorMessage = state.errorMessage,
         onEmailChange = viewModel::onEmailChange,
-        onSubmit = viewModel::onSubmit
+        onSubmit = viewModel::onSubmit,
+        password = "",
+        onPaChange = {}
     )
 }
 
@@ -70,8 +75,10 @@ fun Connecting(
     isError: Boolean,
     errorMessage: String?,
     onEmailChange: (String) -> Unit,
+    onPaChange:(String) -> Unit,
     onSubmit: () -> Unit,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier,
+    password: String) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -79,11 +86,13 @@ fun Connecting(
         contentAlignment = Alignment.Center
     ) {
         Column {
-            Row {
+            Row (
+                modifier.fillMaxWidth(3 / 4f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ){
                 OutlinedTextField(
                     modifier = modifier
-                        .fillMaxWidth(3/4f)
-                        .padding(5.dp)
                         .testTag("emailField"),
                     singleLine = true,
                     value = email,
@@ -95,17 +104,44 @@ fun Connecting(
                         if (isError) Text(errorMessage ?: stringResource(R.string.email_not_ok))
                     }
                 )
+            }
+            Row (
+                modifier.fillMaxWidth(3 / 4f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                OutlinedTextField(
+                    modifier = modifier
+                        .testTag("passwordField"),
+                    value = password,
+                    onValueChange = onPaChange,
+                    isError = isError,
+                    textStyle = LocalTextStyle.current.copy(color = colorResource(R.color.black)),
+                    label =  {Text(stringResource(R.string.password))}
+                )}
+
+
+            }
+            Row(
+                modifier.fillMaxWidth(3 / 4f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Button(
                     onClick = { onSubmit()},
-                    modifier = modifier.padding(5.dp).testTag("okButton")
+                    modifier = modifier
+                        .padding(5.dp)
+                        .testTag("okButton")
                 ) {
                     Text(stringResource(R.string.ok))
                 }
             }
-        }
-    }
-}
+            Row {
+                Text(errorMessage.toString())
+                 }
 
+            }
+        }
 
 @Preview(showBackground = true)
 @Composable
@@ -117,7 +153,9 @@ fun ConnectingPreview(){
             isError = false,
             onEmailChange = {},
             onSubmit = {},
-            modifier = Modifier
+            modifier = Modifier,
+            password = "",
+            onPaChange = {}
         )
     }
 }

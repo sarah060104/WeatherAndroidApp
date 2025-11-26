@@ -16,8 +16,16 @@ class ConnectViewModel : ViewModel() {
             it.copy(
                 email = newEmail,
                 isError = false,
-                errorMessage = null,
+                errorMessage = "",
                 navigate = false
+            )
+        }
+    }
+
+    fun onPasswordChange(newPass : String){
+        _uiState.update {
+            it.copy(
+
             )
         }
     }

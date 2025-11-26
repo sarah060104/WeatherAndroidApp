@@ -5,5 +5,6 @@ data class ConnectUiState (
     val domain:String ="he2b.be",
     val isError: Boolean = false,
     val errorMessage: String? = null,
-    val navigate: Boolean = false
+    val navigate: Boolean = false,
+    val password: String=""//bon après la sécurité  !!
 )
