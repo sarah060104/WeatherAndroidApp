@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +27,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import be.he2b.a61601_projet.httpRequestEtCie.ConnectViewModel
 import be.he2b.a61601_projet.ui.theme._61601projetTheme
 
 
@@ -56,14 +62,15 @@ fun ConnectingRoute(
             viewModel.onNavigated()
         }
     }
-    Connecting(
+    ConnectingScreen(
         email = state.email,
         isError = state.isError,
         errorMessage = state.errorMessage,
         onEmailChange = viewModel::onEmailChange,
         onSubmit = viewModel::onSubmit,
-        password = "",
-        onPaChange = {}
+        password = state.password,
+        onPasswordChange = viewModel::onPasswordChange,
+        modifier = Modifier
     )
 }
 
@@ -121,41 +128,114 @@ fun Connecting(
                 )}
 
 
-            }
-            Row(
-                modifier.fillMaxWidth(3 / 4f),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
+        }
+        Row(
+            modifier.fillMaxWidth(3 / 4f),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Button(
+                onClick = { onSubmit()},
+                modifier = modifier
+                    .padding(5.dp)
+                    .testTag("okButton")
             ) {
-                Button(
-                    onClick = { onSubmit()},
-                    modifier = modifier
-                        .padding(5.dp)
-                        .testTag("okButton")
-                ) {
-                    Text(stringResource(R.string.ok))
-                }
-            }
-            Row {
-                Text(errorMessage.toString())
-                 }
-
+                Text(stringResource(R.string.ok))
             }
         }
+        Row {
+            Text(errorMessage.toString())
+        }
+
+    }
+}
+
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ConnectingScreen(
+    email: String,
+    password: String,
+    isError: Boolean,
+    errorMessage: String?,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            val childModifier = Modifier
+                .fillMaxWidth(0.8f)
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = onEmailChange,
+                label = { Text(stringResource(R.string.email_input)) },
+                isError = isError,
+                textStyle = LocalTextStyle.current.copy(color = Color.Black),
+                singleLine = true,
+                modifier = childModifier.testTag("emailField")
+            )
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = onPasswordChange,
+                label = { Text(stringResource(R.string.password)) },
+                isError = isError,
+                textStyle = LocalTextStyle.current.copy(color = Color.Black),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { onSubmit() }),
+                modifier = childModifier.testTag("passwordField")
+            )
+
+            if (isError && errorMessage != null) {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = childModifier.padding(top = 4.dp)
+                )
+            }
+
+            Button(
+                onClick = onSubmit,
+                modifier = childModifier
+                    .padding(top = 16.dp)
+                    .testTag("okButton")
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun ConnectingPreview(){
     _61601projetTheme {
-        Connecting(
+
+        ConnectingScreen(
             email = "",
+            password = "abc",
             errorMessage = "Adresse e-mail invalide",
             isError = false,
             onEmailChange = {},
+            onPasswordChange = {},
             onSubmit = {},
             modifier = Modifier,
-            password = "",
-            onPaChange = {}
         )
     }
 }

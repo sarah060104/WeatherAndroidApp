@@ -1,5 +1,6 @@
 package be.he2b.a61601_projet
 
+import be.he2b.a61601_projet.httpRequestEtCie.ConnectViewModel
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.runner.RunWith

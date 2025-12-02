@@ -6,5 +6,5 @@ data class ConnectUiState (
     val isError: Boolean = false,
     val errorMessage: String? = null,
     val navigate: Boolean = false,
-    val password: String=""//bon après la sécurité  !!
+    val password: String=""
 )
