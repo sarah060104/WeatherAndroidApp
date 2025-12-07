@@ -9,6 +9,9 @@ object Retrofit {
 
     /**
      * Class who takes care of the configuration of retrofit
+     * TODO: classe retrofit principale qui gère la configuration de retrofit,
+     * TODO: et autre classe herite de celle ci et gère les requetes
+     *
      */
 
     private val  baseUrl = "https://uapuapedcteichqtojgx.supabase.co"
