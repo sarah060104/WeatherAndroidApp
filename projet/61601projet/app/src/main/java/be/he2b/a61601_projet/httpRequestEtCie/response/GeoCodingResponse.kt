@@ -1,5 +1,6 @@
-package be.he2b.a61601_projet
+package be.he2b.a61601_projet.httpRequestEtCie.response
 
+import be.he2b.a61601_projet.httpRequestEtCie.response.GeoCodingResult
 import com.squareup.moshi.Json
 
 class GeoCodingResponse {

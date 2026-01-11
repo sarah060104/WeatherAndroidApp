@@ -1,8 +1,9 @@
-package be.he2b.a61601_projet
+package be.he2b.a61601_projet.httpRequestEtCie
 
+import be.he2b.a61601_projet.httpRequestEtCie.requests.GeoCodingRequestBody
+import be.he2b.a61601_projet.httpRequestEtCie.response.GeoCodingResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface GeoCodingApi {
 

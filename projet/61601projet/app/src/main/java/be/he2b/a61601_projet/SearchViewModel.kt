@@ -2,8 +2,11 @@ package be.he2b.a61601_projet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import be.he2b.a61601_projet.httpRequestEtCie.Retrofit
+import be.he2b.a61601_projet.httpRequestEtCie.client.GeoCoding
+import be.he2b.a61601_projet.httpRequestEtCie.requests.GeoCodingRequestBody
+import be.he2b.a61601_projet.httpRequestEtCie.client.MeteoClient
+import be.he2b.a61601_projet.httpRequestEtCie.requests.MeteoRequestBody
+import be.he2b.a61601_projet.httpRequestEtCie.response.GeoCodingResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,11 +27,22 @@ class SearchViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Method call when the user click on the "ok"/enter button on keyword
+     * first, it'll search for the city's longitude and latitude and register it in a
+     * list of result for each city to get more recent weather info faster for them
+     *
+     * Then it'll search the infos of the weather for the city according to it's
+     * longitude and latitude
+     *
+     *
+     */
     fun onSearch() {
+        if (_uiState.value.cityToSearch.isBlank()) return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val longitude : Double
-            val latitude : Double
+            var longitude : Double =0.0;
+            var latitude : Double=0.0
             try {
                 val requestbody = GeoCodingRequestBody(
                     name = _uiState.value.cityToSearch,
@@ -37,24 +51,24 @@ class SearchViewModel : ViewModel() {
                     format = "json"
                 )
                 val response = httpClient.searchCity(requestbody)
-                longitude = response.result.get(0).longitude
-                latitude = response.result.get(0).latitude
+
+                if (!response.result.isNullOrEmpty()) {
+                    val cityInfo = response.result[0]
+                    val result = GeoCodingResult(
+                        name = cityInfo.name,
+                        latitude = cityInfo.latitude,
+                        longitude = cityInfo.longitude
+                    )
+                    _uiState.update { it.copy(searchResults = listOf(result), isLoading = false) }
+                } else {
+                    _uiState.update { it.copy(errorMessage = "Aucune ville trouvée", isLoading = false) }
+                }
 
             }catch (e: Exception){
-                _uiState.update { it.copy(errorMessage = e.message) }
+                _uiState.update { it.copy(errorMessage = e.message, isLoading = false )}
 
             }
-            try {
-                val requestBody = MeteoRequestBody(
-                    longitude = longitude,
-                    latitude = latitude
-                )
-                val response = MeteoClient.myHttpClient.getMeteo(requestBody)
 
-            } catch (e:Exception){
-                _uiState.update { it.copy(errorMessage = e.message) }
-
-            }
         }
 
     }

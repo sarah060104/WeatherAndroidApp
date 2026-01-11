@@ -1,5 +1,7 @@
 package be.he2b.a61601_projet
 
+
+import androidx.compose.runtime.getValue
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -25,6 +28,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.he2b.a61601_projet.ui.theme._61601projetTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +46,7 @@ class MainActivity : ComponentActivity() {
                             NavigationBar {
                                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                                     val currentRoute = navBackStackEntry?.destination?.route
-                                    val screens = listOf(AppScreen.Home, AppScreen.About)
+                                    val screens = listOf(AppScreen.Home, AppScreen.About, AppScreen.Search)
                                     screens.forEach { screen ->
                                         val selected = currentRoute == screen.name
                                         NavigationBarItem(
@@ -62,6 +67,7 @@ class MainActivity : ComponentActivity() {
                                                     imageVector = when (screen) {
                                                         AppScreen.Home -> Icons.Default.Home
                                                         AppScreen.About -> Icons.Default.Info
+                                                        AppScreen.Search -> Icons.Default.Search
                                                         else -> Icons.Default.Star
                                                     },
                                                     contentDescription = "Home"
@@ -92,14 +98,18 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(route = AppScreen.Home.name) { HomeScreen() }
-                        composable(route = AppScreen.About.name) { AboutScreen()  }
+                        composable(route = AppScreen.About.name) { AboutScreen() }
+                        composable(route = AppScreen.Search.name) { Searching()
+
+
+                        }}
                     }
 
                 }
             }
         }
     }
-}
+
 
 
 

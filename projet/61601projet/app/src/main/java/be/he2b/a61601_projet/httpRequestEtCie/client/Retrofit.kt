@@ -1,5 +1,6 @@
-package be.he2b.a61601_projet.httpRequestEtCie
+package be.he2b.a61601_projet.httpRequestEtCie.client
 
+import be.he2b.a61601_projet.httpRequestEtCie.MyRetrofitHttpClient
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit

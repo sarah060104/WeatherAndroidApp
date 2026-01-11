@@ -1,12 +1,14 @@
-package be.he2b.a61601_projet
+package be.he2b.a61601_projet.httpRequestEtCie.response.geoCodingResponse
 
+import be.he2b.a61601_projet.httpRequestEtCie.response.geoCodingResponse.DailyResponse
+import be.he2b.a61601_projet.httpRequestEtCie.response.geoCodingResponse.Hourly
 import com.squareup.moshi.Json
 
 data class MeteoResponse (
     @Json(name = "hourly")
     val hourly : Hourly,
     @Json(name = "daily")
-    val daily : Daily
+    val daily : DailyResponse
 
     )
 

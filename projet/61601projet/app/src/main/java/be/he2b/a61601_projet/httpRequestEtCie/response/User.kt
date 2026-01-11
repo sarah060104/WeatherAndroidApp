@@ -1,4 +1,4 @@
-package be.he2b.a61601_projet.httpRequestEtCie
+package be.he2b.a61601_projet.httpRequestEtCie.response
 
 import com.squareup.moshi.Json
 
