@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
@@ -18,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,8 +25,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import be.he2b.a61601_projet.ui.AppScreen
 import be.he2b.a61601_projet.ui.theme._61601projetTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
+import be.he2b.a61601_projet.ui.about.AboutScreen
+import be.he2b.a61601_projet.ui.home.HomeScreen
+import be.he2b.a61601_projet.ui.search.Searching
+import be.he2b.a61601_projet.ui.connect.ConnectingRoute
+
 
 
 class MainActivity : ComponentActivity() {
