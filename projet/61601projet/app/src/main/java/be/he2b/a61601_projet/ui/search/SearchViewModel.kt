@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.he2b.a61601_projet.data.client.GeoCodingClient
 import be.he2b.a61601_projet.data.requests.GeoCodingRequestBody
-import be.he2b.a61601_projet.data.response.savedCities
+import be.he2b.a61601_projet.data.response.savedCity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,41 +38,47 @@ class SearchViewModel : ViewModel() {
      *
      *
      */
+
+
     fun onSearch() {
         if (_uiState.value.cityToSearch.isBlank()) return
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            var longitude : Double =0.0;
-            var latitude : Double=0.0
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             try {
-                val requestbody = GeoCodingRequestBody(
+                val response = httpClient.searchCity(
                     name = _uiState.value.cityToSearch,
-                    count = 1,
-                    language = "fr",
-                    format = "json"
+                    count = 5,
+                    language = "fr"
                 )
-                val response = httpClient.searchCity(requestbody)
 
                 if (!response.result.isNullOrEmpty()) {
-                    val cityInfo = response.result[0]
-                    val result = savedCities(
-                        name = cityInfo.name,
-                        latitude = cityInfo.latitude,
-                        longitude = cityInfo.longitude
-                    )
-                    _uiState.update { it.copy(searchResults = listOf(result), isLoading = false) }
+                    val results = response.result.map {
+                        savedCity(
+                            name = it.name,
+                            latitude = it.latitude,
+                            longitude = it.longitude
+                        )
+                    }
+                    _uiState.update {
+                        it.copy(searchResults = results, isLoading = false)
+                    }
                 } else {
-                    _uiState.update { it.copy(errorMessage = "Aucune ville trouvée", isLoading = false) }
+                    _uiState.update {
+                        it.copy(
+                            searchResults = emptyList(),
+                            errorMessage = "Aucune ville trouvée",
+                            isLoading = false
+                        )
+                    }
                 }
-
-            }catch (e: Exception){
-                _uiState.update { it.copy(errorMessage = e.message, isLoading = false )}
-
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(errorMessage = e.message, isLoading = false)
+                }
             }
-
         }
-
     }
+
 
 
 

@@ -1,6 +1,6 @@
 package be.he2b.a61601_projet.data.response
 
-data class savedCities(
+data class savedCity(
 
     /**
      * data class used to save cities and their geo coding

@@ -2,11 +2,30 @@ package be.he2b.a61601_projet.data.api
 
 import be.he2b.a61601_projet.data.requests.GeoCodingRequestBody
 import be.he2b.a61601_projet.data.response.GeoCodingResponse
+import be.he2b.a61601_projet.data.response.geoCodingResponse.MeteoResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface GeoCodingApi {
 
-    @GET("search?name=&count=1&language=fr&format=json")
-    suspend fun searchCity(@Body requestBody: GeoCodingRequestBody): GeoCodingResponse
+    @GET("search")
+    suspend fun searchCity(
+        @Query("name") name: String,
+        @Query("count") count: Int = 5,
+        @Query("language") language: String = "fr",
+        @Query("format") format: String = "json"
+    ): GeoCodingResponse
+
+
+
+
+
+    suspend fun getWeather(
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query("daily") daily: String = "weather_code,temperature_2m_max,temperature_2m_min",
+        @Query("hourly") hourly: String = "weather_code,temperature_2m,relative_humidity_2m,precipitation_probability",
+        @Query("timezone") timezone: String = "auto"
+    ): MeteoResponse
 }

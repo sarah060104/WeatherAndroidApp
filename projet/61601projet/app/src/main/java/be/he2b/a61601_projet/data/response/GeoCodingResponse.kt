@@ -5,5 +5,5 @@ import com.squareup.moshi.Json
 class GeoCodingResponse {
 
     @Json(name = "result")
-    val result : List<savedCities> = emptyList()
+    val result : List<savedCity> = emptyList()
 }

@@ -26,7 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import be.he2b.a61601_projet.data.response.savedCities
+import be.he2b.a61601_projet.data.response.savedCity
 import be.he2b.a61601_projet.ui.theme._61601projetTheme
 
 
@@ -59,7 +59,7 @@ fun SearchPreview(
             modifier = Modifier,
             e = "test",
             onSearch = {},
-            results = listOf(savedCities("Bruxelles", 1.0, 2.0)),
+            results = listOf(savedCity("Bruxelles", 1.0, 2.0)),
             isLoading = false
         )
     }
@@ -72,7 +72,7 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     e : String,
     onSearch: () -> Unit,
-    results: List<savedCities>,
+    results: List<savedCity>,
     isLoading: Boolean
 ) {
     Box(
