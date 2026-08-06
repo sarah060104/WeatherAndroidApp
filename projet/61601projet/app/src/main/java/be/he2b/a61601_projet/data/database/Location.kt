@@ -20,7 +20,9 @@ data class Location(
 
     val longitude: Double,
 
+    @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean = false,
 
+    @ColumnInfo(name = "added_at")
     val addedAt: Long = System.currentTimeMillis()
 )
