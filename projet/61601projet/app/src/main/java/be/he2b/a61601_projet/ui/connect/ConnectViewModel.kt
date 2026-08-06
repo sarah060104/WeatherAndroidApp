@@ -2,7 +2,7 @@ package be.he2b.a61601_projet.ui.connect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import be.he2b.a61601_projet.data.client.Retrofit
+import be.he2b.a61601_projet.data.client.AuthClient
 import be.he2b.a61601_projet.data.requests.AuthRequestBody
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ class ConnectViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ConnectUiState())
     val uiState: StateFlow<ConnectUiState> = _uiState.asStateFlow()
 
-    private val httpClient = Retrofit.myHttpClient
+    private val httpClient = AuthClient.myHttpClient
 
     fun onEmailChange(newEmail: String) {
         _uiState.update {
@@ -54,6 +54,7 @@ class ConnectViewModel : ViewModel() {
                         }
                     }
                 }else{
+
                     _uiState.update {
                         it.copy(
                             isError = true,
@@ -62,11 +63,12 @@ class ConnectViewModel : ViewModel() {
                     }
                 }
             }catch (e: Exception){
+
                 _uiState.update {
                     it.copy(
                         isError = true,
-                        errorMessage = "Email ou mot de passe incorrect." // ou e.message
-                    )
+                        errorMessage = e.message ?: "Erreur inconnue",
+                        )
                 }
             }
         }

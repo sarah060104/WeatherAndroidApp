@@ -37,11 +37,12 @@ import be.he2b.a61601_projet.ui.connect.ConnectingRoute
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Repository.init(applicationContext)
         enableEdgeToEdge()
         setContent {
             _61601projetTheme {
                 val navController = rememberNavController()
-                var connected by remember { mutableStateOf(false) }
+                var connected by remember { mutableStateOf(true) }
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar ={
                         if (connected) {
