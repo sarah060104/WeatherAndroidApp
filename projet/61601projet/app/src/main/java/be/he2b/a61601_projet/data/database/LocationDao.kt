@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import java.util.Optional
 
 @Dao
 interface LocationDao {
@@ -29,7 +30,7 @@ interface LocationDao {
      * check if name of locations already in the database (to receive its geographical data long and lat
      */
     @Query("SELECT * FROM locations WHERE name LIKE '%' || :query || '%' ORDER BY name")
-    suspend fun search(query: String): Location
+    suspend fun search(query: String): Optional<Location>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(location: Location): Long
