@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import be.he2b.a61601_projet.data.model.Repository
 import be.he2b.a61601_projet.ui.AppScreen
 import be.he2b.a61601_projet.ui.theme._61601projetTheme
 import be.he2b.a61601_projet.ui.about.AboutScreen
@@ -86,7 +87,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = AppScreen.Connection.name,
+                        startDestination = AppScreen.Home.name,
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable(route = AppScreen.Connection.name) {
