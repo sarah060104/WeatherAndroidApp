@@ -9,13 +9,14 @@ import androidx.room.RoomDatabase
  * role : initialisation of the database
  */
 @Database(
-    entities = [Location::class],
-    version = 1,
+    entities = [Location::class, WeatherEntry::class],
+    version = 2,
     exportSchema = false
 )
 abstract class WeatherAppDB : RoomDatabase() {
 
     abstract fun locationDao(): LocationDao
+    abstract fun weatherDao(): WeatherDao
 
     companion object {
         private var sInstance: WeatherAppDB? = null
