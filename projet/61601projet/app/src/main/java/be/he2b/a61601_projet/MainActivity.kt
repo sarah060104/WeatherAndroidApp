@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             _61601projetTheme {
                 val navController = rememberNavController()
-                var connected by remember { mutableStateOf(true) }
+                var connected by remember { mutableStateOf(false) }
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar ={
                         if (connected) {
@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = AppScreen.Home.name,
+                        startDestination = AppScreen.Connection.name,
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable(route = AppScreen.Connection.name) {
