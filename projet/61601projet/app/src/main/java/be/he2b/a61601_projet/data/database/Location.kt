@@ -20,6 +20,8 @@ data class Location(
 
     val country: String? = null,
 
+    val admin1: String? = null,
+
     val latitude: Double,
 
     val longitude: Double,

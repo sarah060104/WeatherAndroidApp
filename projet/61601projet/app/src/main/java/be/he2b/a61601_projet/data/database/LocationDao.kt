@@ -32,6 +32,20 @@ interface LocationDao {
     @Query("SELECT * FROM locations WHERE name LIKE '%' || :query || '%' ORDER BY name")
     suspend fun search(query: String): Optional<Location>
 
+    /**
+     * Mark the given location as favorite and unmark every other one
+     * in a single atomic UPDATE (only one favorite at a time).
+     */
+    @Query("UPDATE locations SET is_favorite = CASE WHEN id = :id THEN 1 ELSE 0 END")
+    suspend fun setFavorite(id: Long)
+
+    /**
+     * Look up a stored location by its Open-Meteo id.
+     * Used to recover the Room row id when insert() returns -1 (already present).
+     */
+    @Query("SELECT * FROM locations WHERE open_meteo_id = :openMeteoId LIMIT 1")
+    suspend fun getByOpenMeteoId(openMeteoId: Long): Location?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(location: Location): Long
 

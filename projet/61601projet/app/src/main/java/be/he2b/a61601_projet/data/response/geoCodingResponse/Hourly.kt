@@ -1,7 +1,6 @@
 package be.he2b.a61601_projet.data.response.geoCodingResponse
 
 import com.squareup.moshi.Json
-import java.time.LocalTime
 
 data class Hourly (
     @Json(name = "time")
@@ -11,9 +10,5 @@ data class Hourly (
     @Json(name = "precipitation_probability")
     val precipitation_probability : List<Int>,
     @Json(name = "weather_code")
-    val weather_code : List<Int>,
-    @Json(name = "temperature_m")
-    val temperature_m : List<Double>
-
-
+    val weather_code : List<Int>
 )

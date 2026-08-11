@@ -6,6 +6,7 @@ import be.he2b.a61601_projet.data.database.LocationDao
 import be.he2b.a61601_projet.data.database.WeatherAppDB
 import be.he2b.a61601_projet.data.database.WeatherDao
 import be.he2b.a61601_projet.data.database.WeatherEntry
+import be.he2b.a61601_projet.data.response.savedCity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -36,13 +37,47 @@ object Repository {
     suspend fun saveLocation(location: Location): Long =
         locationDao.insert(location)
 
+    /**
+     * Insert a city picked from the search results into Room.
+     * Deduplication is handled by the unique index on open_meteo_id
+     * combined with OnConflictStrategy.IGNORE (returns -1 if already present).
+     */
+    suspend fun saveLocationFromSearch(city: savedCity): Long =
+        locationDao.insert(
+            Location(
+                openMeteoId = city.id,
+                name = city.name,
+                country = city.country,
+                admin1 = city.admin1,
+                latitude = city.latitude,
+                longitude = city.longitude
+            )
+        )
+
+    suspend fun setFavorite(id: Long) =
+        locationDao.setFavorite(id)
+
+    /**
+     * Save the searched city (or reuse the existing row) then mark it as the
+     * current favorite. Returns the Room row id of the favorite location.
+     */
+    suspend fun saveAndFavorite(city: savedCity): Long {
+        val inserted = saveLocationFromSearch(city)
+        val id = if (inserted != -1L) {
+            inserted
+        } else {
+            locationDao.getByOpenMeteoId(city.id)?.id
+                ?: error("City with open_meteo_id=${city.id} not found after insert conflict")
+        }
+        locationDao.setFavorite(id)
+        return id
+    }
+
     suspend fun deleteLocation(location: Location) =
         locationDao.delete(location)
 
     suspend fun deleteLocationById(id: Long) =
         locationDao.deleteById(id)
-
-    // ========== WEATHER ==========
 
     /**
      * Reactive flow of cached forecast entries for a location.

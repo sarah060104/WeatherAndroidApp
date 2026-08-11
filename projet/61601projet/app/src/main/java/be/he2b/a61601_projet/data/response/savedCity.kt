@@ -11,5 +11,8 @@ data class savedCity(
     val id: Long,
     val name : String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val country: String? = null,
+    @Json(name = "admin1")
+    val admin1: String? = null
 )
