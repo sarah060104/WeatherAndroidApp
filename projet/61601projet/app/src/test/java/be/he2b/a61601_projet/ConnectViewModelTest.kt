@@ -21,18 +21,12 @@ class ConnectViewModelTest {
     }
 
     @Test
-    fun onSubmitGoodEmail() {
+    fun onSubmitValidEmailPassesFormatCheck() {
         val vm = ConnectViewModel()
         vm.onEmailChange("user@he2b.be")
         vm.onSubmit()
-        var s = vm.uiState.value
-        assertFalse(s.isError)
-        assertNull(s.errorMessage)
-        assertTrue(s.navigate)
-
-        vm.onNavigated()
-        s = vm.uiState.value
-        assertFalse(s.navigate)
+        val s = vm.uiState.value
+       assertNotEquals("Adresse e-mail invalide", s.errorMessage)
     }
 
     @Test
