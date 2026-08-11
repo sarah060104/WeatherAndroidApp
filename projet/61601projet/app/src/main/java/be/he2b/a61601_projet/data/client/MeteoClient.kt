@@ -4,7 +4,7 @@ import be.he2b.a61601_projet.data.api.MeteoApi
 
 object MeteoClient {
 
-    private val baseUrl = "https://api.open-meteo.com/v1/forecast?"
+    private val baseUrl = "https://api.open-meteo.com/"
 
 
     private val retrofit : retrofit2.Retrofit = RetrofitBuilder.createRetrofit(baseUrl)

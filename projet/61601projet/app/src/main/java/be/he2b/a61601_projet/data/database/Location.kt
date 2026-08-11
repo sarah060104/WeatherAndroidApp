@@ -6,11 +6,15 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "locations"
+    tableName = "locations",
+    indices = [Index(value = ["open_meteo_id"], unique = true)]
 )
 data class Location(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+
+    @ColumnInfo(name = "open_meteo_id")
+    val openMeteoId: Long,
 
     val name: String,
 
