@@ -34,9 +34,6 @@ object Repository {
 
     fun observeFavorites(): Flow<List<Location>> = locationDao.SearchFavorite()
 
-    suspend fun saveLocation(location: Location): Long =
-        locationDao.insert(location)
-
     /**
      * Insert a city picked from the search results into Room.
      * Deduplication is handled by the unique index on open_meteo_id
@@ -72,9 +69,6 @@ object Repository {
         locationDao.setFavorite(id)
         return id
     }
-
-    suspend fun deleteLocation(location: Location) =
-        locationDao.delete(location)
 
     suspend fun deleteLocationById(id: Long) =
         locationDao.deleteById(id)

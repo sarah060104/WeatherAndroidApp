@@ -37,6 +37,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -57,7 +58,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.ui.test.junit4)
-    testImplementation("org.robolectric:robolectric:4.16")
+    testImplementation("org.robolectric:robolectric:4.16.1")
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -77,7 +78,13 @@ dependencies {
     ksp("androidx.room:room-compiler:2.8.4")
     implementation ("androidx.room:room-ktx:2.8.4")
 
-    // test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    // datastore (persistent key/value storage for the auth session)
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
 
+    // test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.4.0")
+
+    // core library desugaring : rend java.time.* utilisable dès minSdk 24
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

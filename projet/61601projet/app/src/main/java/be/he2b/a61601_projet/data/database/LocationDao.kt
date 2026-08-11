@@ -5,9 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import java.util.Optional
 
 @Dao
 interface LocationDao {
@@ -25,12 +23,6 @@ interface LocationDao {
      */
     @Query("SELECT * FROM locations WHERE is_favorite = 1 ")
     fun SearchFavorite(): Flow<List<Location>>
-
-    /**
-     * check if name of locations already in the database (to receive its geographical data long and lat
-     */
-    @Query("SELECT * FROM locations WHERE name LIKE '%' || :query || '%' ORDER BY name")
-    suspend fun search(query: String): Optional<Location>
 
     /**
      * Mark the given location as favorite and unmark every other one
