@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -26,11 +27,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.he2b.a61601_projet.data.model.Repository
+import be.he2b.a61601_projet.data.session.SessionStore
 import be.he2b.a61601_projet.ui.AppScreen
 import be.he2b.a61601_projet.ui.theme._61601projetTheme
 import be.he2b.a61601_projet.ui.about.AboutScreen
 import be.he2b.a61601_projet.ui.home.HomeScreen
 import be.he2b.a61601_projet.ui.search.Searching
+import be.he2b.a61601_projet.ui.settings.SettingsScreen
 import be.he2b.a61601_projet.ui.connect.ConnectingRoute
 
 
@@ -39,6 +42,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Repository.init(applicationContext)
+        SessionStore.init(applicationContext)
         enableEdgeToEdge()
         setContent {
             _61601projetTheme {
@@ -51,7 +55,7 @@ class MainActivity : ComponentActivity() {
                             NavigationBar {
                                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                                     val currentRoute = navBackStackEntry?.destination?.route
-                                    val screens = listOf(AppScreen.Home, AppScreen.About, AppScreen.Search)
+                                    val screens = listOf(AppScreen.Home, AppScreen.Search, AppScreen.Settings, AppScreen.About)
                                     screens.forEach { screen ->
                                         val selected = currentRoute == screen.name
                                         NavigationBarItem(
@@ -73,6 +77,7 @@ class MainActivity : ComponentActivity() {
                                                         AppScreen.Home -> Icons.Default.Home
                                                         AppScreen.About -> Icons.Default.Info
                                                         AppScreen.Search -> Icons.Default.Search
+                                                        AppScreen.Settings -> Icons.Default.Settings
                                                         else -> Icons.Default.Star
                                                     },
                                                     contentDescription = "Home"
@@ -102,12 +107,28 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable(route = AppScreen.Home.name) { HomeScreen() }
+                        composable(route = AppScreen.Home.name) {
+                            HomeScreen(
+                                onNavigateToSearch = {
+                                    navController.navigate(AppScreen.Search.name) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                        }
                         composable(route = AppScreen.About.name) { AboutScreen() }
-                        composable(route = AppScreen.Search.name) { Searching()
-
-
-                        }}
+                        composable(route = AppScreen.Search.name) {
+                            Searching(
+                                onNavigateHome = {
+                                    navController.navigate(AppScreen.Home.name) {
+                                        popUpTo(AppScreen.Home.name) { inclusive = false }
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                        }
+                        composable(route = AppScreen.Settings.name) { SettingsScreen() }
+                        }
                     }
 
                 }
