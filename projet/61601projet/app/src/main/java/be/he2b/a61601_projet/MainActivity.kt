@@ -18,9 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,14 +44,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             _61601projetTheme {
                 val navController = rememberNavController()
-                var connected by remember { mutableStateOf(false) }
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                // La nav bar apparaît dès qu'on n'est plus sur l'écran de connexion.
+                // Dérivé de la route pour survivre aux changements de configuration
+                // (rotation, dark/light) sans se reset.
+                val connected = currentRoute != null && currentRoute != AppScreen.Connection.name
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar ={
                         if (connected) {
 
                             NavigationBar {
-                                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                                    val currentRoute = navBackStackEntry?.destination?.route
                                     val screens = listOf(AppScreen.Home, AppScreen.Search, AppScreen.Settings, AppScreen.About)
                                     screens.forEach { screen ->
                                         val selected = currentRoute == screen.name
@@ -98,7 +98,6 @@ class MainActivity : ComponentActivity() {
                         composable(route = AppScreen.Connection.name) {
                             ConnectingRoute(
                                 onNavigateHome = {
-                                    connected = true
                                     navController.navigate(AppScreen.Home.name) {
                                         popUpTo(AppScreen.Connection.name) {
                                             inclusive = true
@@ -130,7 +129,6 @@ class MainActivity : ComponentActivity() {
                         composable(route = AppScreen.Settings.name) {
                             SettingsScreen(
                                 onLoggedOut = {
-                                    connected = false
                                     navController.navigate(AppScreen.Connection.name) {
                                         popUpTo(navController.graph.startDestinationId) {
                                             inclusive = true
