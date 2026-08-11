@@ -1,5 +1,6 @@
 package be.he2b.a61601_projet.ui.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -32,9 +34,17 @@ import be.he2b.a61601_projet.ui.theme._61601projetTheme
 
 @Composable
 fun Searching(
+    onNavigateHome: () -> Unit = {},
     viewModel: SearchViewModel = viewModel()
 ){
     val state = viewModel.uiState.collectAsState().value
+  LaunchedEffect(state.navigateToHome) {
+        if (state.navigateToHome) {
+            onNavigateHome()
+            viewModel.onNavigationHandled()
+        }
+    }
+
     SearchScreen(
         searchItem = state.cityToSearch,
         onQueryChange = { newValue -> viewModel.onCityChange(newValue)},
@@ -42,7 +52,8 @@ fun Searching(
         e = state.searchResults.size.toString(),
         onSearch = { viewModel.onSearch()},
         results = state.searchResults,
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
+        onCityClicked = { city -> viewModel.onCityClicked(city) }
     )
 
 }
@@ -59,8 +70,9 @@ fun SearchPreview(
             modifier = Modifier,
             e = "test",
             onSearch = {},
-            results = listOf(savedCity("Bruxelles", 1.0, 2.0)),
-            isLoading = false
+            results = listOf(savedCity(id = 1L, name = "Bruxelles", latitude = 1.0, longitude = 2.0)),
+            isLoading = false,
+            onCityClicked = {}
         )
     }
 }
@@ -73,7 +85,8 @@ fun SearchScreen(
     e : String,
     onSearch: () -> Unit,
     results: List<savedCity>,
-    isLoading: Boolean
+    isLoading: Boolean,
+    onCityClicked: (savedCity) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -113,7 +126,12 @@ fun SearchScreen(
                 )
             LazyColumn {
                 items(results) {it ->
-                    CitySearched(city = it.name, longitude = it.longitude, latitude = it.latitude)
+                    CitySearched(
+                        city = it.name,
+                        admin1 = it.admin1,
+                        country = it.country,
+                        onClick = { onCityClicked(it) }
+                    )
                 }
             }
         }
@@ -123,9 +141,21 @@ fun SearchScreen(
 @Composable
 fun CitySearched(
     city: String,
-    longitude: Double,
-    latitude: Double) {
-    Box(modifier = Modifier.padding(8.dp)) {
-        Text(text = "$city ($latitude, $longitude)")
+    admin1: String?,
+    country: String?,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        Text(text = formatCityLabel(city, admin1, country))
     }
 }
+
+
+fun formatCityLabel(city: String, admin1: String?, country: String?): String =
+    listOfNotNull(city, admin1?.takeIf { it.isNotBlank() }, country?.takeIf { it.isNotBlank() })
+        .joinToString(", ")

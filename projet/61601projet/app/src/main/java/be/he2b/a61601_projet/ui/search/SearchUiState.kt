@@ -12,7 +12,6 @@ data class SearchUiState(
     val recentCities: List<savedCity> = emptyList(),//ville aec résultat
     val searchResults: List<savedCity> = emptyList(), //ville cherché
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val navigateToHome: Boolean = false
 )
-
-
