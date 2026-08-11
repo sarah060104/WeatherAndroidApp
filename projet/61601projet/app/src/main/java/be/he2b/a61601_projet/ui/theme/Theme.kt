@@ -8,34 +8,37 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = BlueDarkPrimary,
+    secondary = BlueDarkSecondary,
+    tertiary = BlueDarkTertiary,
+    background = BlueDarkBackground,
+    surface = BlueDarkSurface,
+    onPrimary = Color.Black,
+    onBackground = Color.White,
+    onSurface = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = BlueLightPrimary,
+    secondary = BlueLightSecondary,
+    tertiary = BlueLightTertiary,
+    background = BlueLightBackground,
+    surface = BlueLightSurface,
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onBackground = Color(0xFF0D1B2A),
+    onSurface = Color(0xFF0D1B2A)
 )
 
 @Composable
 fun _61601projetTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    // couleurs dynamiques Material You désactivées : sinon Android 12+
+    // écrase notre palette avec l'accent du fond d'écran.
+    dynamicColor: Boolean = false,
     Content: @Composable () -> Unit
 ) {
     val colorScheme = when {

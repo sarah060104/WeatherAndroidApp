@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -24,8 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.he2b.a61601_projet.data.database.Location
+import be.he2b.a61601_projet.data.response.geoCodingResponse.Hourly
 import be.he2b.a61601_projet.data.response.geoCodingResponse.MeteoResponse
 import be.he2b.a61601_projet.ui.search.formatCityLabel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 @Composable
 fun HomeScreen(
@@ -113,11 +118,22 @@ private fun WeatherContent(
         }
 
         val daily = weather.daily
+        val currentIdx = findCurrentHourIndex(weather.hourly)
+        val currentTemp = if (currentIdx >= 0)
+            weather.hourly.temperature_2m.getOrNull(currentIdx)
+        else null
+
         TodayCard(
             code = daily.weather_code.first(),
+            currentTemp = currentTemp,
             tempMin = daily.temperature_2m_min.first(),
             tempMax = daily.temperature_2m_max.first()
         )
+
+        if (currentIdx >= 0 && weather.hourly.time.isNotEmpty()) {
+            Spacer(Modifier.height(16.dp))
+            HourlyForecast(hourly = weather.hourly, startIdx = currentIdx)
+        }
 
         Spacer(Modifier.height(16.dp))
         Text(
@@ -143,7 +159,7 @@ private fun WeatherContent(
 }
 
 @Composable
-private fun TodayCard(code: Int, tempMin: Double, tempMax: Double) {
+private fun TodayCard(code: Int, currentTemp: Double?, tempMin: Double, tempMax: Double) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
@@ -154,10 +170,23 @@ private fun TodayCard(code: Int, tempMin: Double, tempMax: Double) {
             Text(text = weatherEmoji(code), style = MaterialTheme.typography.displayLarge)
             Text(text = weatherLabel(code), style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
-            Text(
-                text = "min ${tempMin}° / max ${tempMax}°",
-                style = MaterialTheme.typography.bodyLarge
-            )
+            if (currentTemp != null) {
+                Text(
+                    text = "${currentTemp.roundToInt()}°",
+                    style = MaterialTheme.typography.displayMedium
+                )
+                Spacer(Modifier.height(4.dp))
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(
+                    text = "↓ ${tempMin.roundToInt()}°",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "↑ ${tempMax.roundToInt()}°",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }
@@ -178,13 +207,76 @@ private fun DayRow(day: DayForecast) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = day.date.substringAfterLast("-"), style = MaterialTheme.typography.bodyMedium)
+        Text(text = formatDayMonth(day.date), style = MaterialTheme.typography.bodyMedium)
         Text(text = weatherEmoji(day.weatherCode), style = MaterialTheme.typography.titleLarge)
-        Text(
-            text = "${day.tempMin}° / ${day.tempMax}°",
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = "↓ ${day.tempMin.roundToInt()}°",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "↑ ${day.tempMax.roundToInt()}°",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
+}
+
+@Composable
+private fun HourlyForecast(hourly: Hourly, startIdx: Int, count: Int = 10) {
+    val end = minOf(startIdx + count, hourly.time.size)
+    Text(
+        text = "Prochaines heures",
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.fillMaxWidth()
+    )
+    Spacer(Modifier.height(8.dp))
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items((startIdx until end).toList()) { i ->
+            HourColumn(
+                hourLabel = hourly.time[i].substringAfter("T").substring(0, 2) + "h",
+                emoji = weatherEmoji(hourly.weather_code.getOrElse(i) { 0 }),
+                temp = hourly.temperature_2m.getOrElse(i) { 0.0 }
+            )
+        }
+    }
+}
+
+@Composable
+private fun HourColumn(hourLabel: String, emoji: String, temp: Double) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(text = hourLabel, style = MaterialTheme.typography.bodySmall)
+        Text(text = emoji, style = MaterialTheme.typography.titleLarge)
+        Text(text = "${temp.roundToInt()}°", style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+/**
+ * "2026-08-12" -> "12/08"
+ */
+private fun formatDayMonth(isoDate: String): String {
+    val parts = isoDate.split("-")
+    return if (parts.size >= 3) "${parts[2]}/${parts[1]}" else isoDate
+}
+
+/**
+ * Cherche dans hourly.time le premier créneau >= heure actuelle.
+ * Les strings ISO 8601 ("2026-08-11T14:00") sont triables lexicographiquement,
+ * donc une simple comparaison de String suffit.
+ */
+private fun findCurrentHourIndex(hourly: Hourly): Int {
+    if (hourly.time.isEmpty()) return -1
+    val nowStr = LocalDateTime.now()
+        .withMinute(0).withSecond(0).withNano(0)
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"))
+    val idx = hourly.time.indexOfFirst { it >= nowStr }
+    return if (idx >= 0) idx else 0
 }
 
 /**
