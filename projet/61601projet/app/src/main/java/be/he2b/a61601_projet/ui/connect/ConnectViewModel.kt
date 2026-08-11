@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.he2b.a61601_projet.data.client.AuthClient
 import be.he2b.a61601_projet.data.requests.AuthRequestBody
+import be.he2b.a61601_projet.data.session.SessionStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +45,11 @@ class ConnectViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val authResponse = response.body()
                     if (authResponse != null) {
+                        SessionStore.save(
+                            accessToken = authResponse.accessToken,
+                            refreshToken = authResponse.refreshToken,
+                            userId = authResponse.user.id
+                        )
                         _uiState.update { it.copy( navigate = true) }
                     } else {
                         _uiState.update {
