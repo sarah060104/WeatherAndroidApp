@@ -100,7 +100,7 @@ fun SearchScreen(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp, 64.dp, 16.dp, 16.dp),
-                placeholder = { Text("Search...") },
+                placeholder = { Text("Chercher une location...") },
                 leadingIcon = {
                     if (isLoading) {LinearProgressIndicator(modifier = Modifier.fillMaxWidth(0.1f)) // Or some other indicator
                     } else {
