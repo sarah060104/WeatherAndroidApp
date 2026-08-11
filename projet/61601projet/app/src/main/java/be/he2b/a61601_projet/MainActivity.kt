@@ -127,7 +127,18 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable(route = AppScreen.Settings.name) { SettingsScreen() }
+                        composable(route = AppScreen.Settings.name) {
+                            SettingsScreen(
+                                onLoggedOut = {
+                                    connected = false
+                                    navController.navigate(AppScreen.Connection.name) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
                         }
                     }
 

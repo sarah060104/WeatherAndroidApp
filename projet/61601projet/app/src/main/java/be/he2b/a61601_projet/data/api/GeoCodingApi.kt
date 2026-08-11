@@ -17,15 +17,4 @@ interface GeoCodingApi {
         @Query("format") format: String = "json"
     ): GeoCodingResponse
 
-
-
-
-
-    suspend fun getWeather(
-        @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double,
-        @Query("daily") daily: String = "weather_code,temperature_2m_max,temperature_2m_min",
-        @Query("hourly") hourly: String = "weather_code,temperature_2m,relative_humidity_2m,precipitation_probability",
-        @Query("timezone") timezone: String = "auto"
-    ): MeteoResponse
 }
