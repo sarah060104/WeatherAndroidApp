@@ -1,5 +1,6 @@
 package be.he2b.a61601_projet.ui.connect
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.he2b.a61601_projet.data.client.AuthClient
@@ -34,11 +35,21 @@ class ConnectViewModel : ViewModel() {
     }
 
     fun onSubmit() {
+        val email = _uiState.value.email
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _uiState.update {
+                it.copy(
+                    isError = true,
+                    errorMessage = "Adresse e-mail invalide"
+                )
+            }
+            return
+        }
         viewModelScope.launch {
-            _uiState.update { it.copy(isError = false) }
+            _uiState.update { it.copy(isError = false, errorMessage = null) }
             try {
                 val requestBody = AuthRequestBody(
-                    email = _uiState.value.email,
+                    email = email,
                     password = _uiState.value.password
                 )
                 val response = httpClient.signIn(requestBody)

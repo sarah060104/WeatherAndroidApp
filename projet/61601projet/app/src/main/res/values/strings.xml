@@ -4,5 +4,5 @@
     <string name="ok">OK</string>
     <string name="email_not_ok">Adresse-email invalide</string>
     <string name="password">Mot de passe</string>
-    <string name="password_not_ok">Adresse-email ou mot de passe invalide</string>
+    <string name="password_not_ok">Mot de passe invalide</string>
 </resources>

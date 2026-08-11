@@ -178,7 +178,7 @@ private fun DayRow(day: DayForecast) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = day.date, style = MaterialTheme.typography.bodyMedium)
+        Text(text = day.date.substringAfterLast("-"), style = MaterialTheme.typography.bodyMedium)
         Text(text = weatherEmoji(day.weatherCode), style = MaterialTheme.typography.titleLarge)
         Text(
             text = "${day.tempMin}° / ${day.tempMax}°",
@@ -188,6 +188,7 @@ private fun DayRow(day: DayForecast) {
 }
 
 /**
+ * add emoji according to weather code
  * Open-Meteo WMO weather codes → emoji. Reference:
  * https://open-meteo.com/en/docs (weather_code section)
  */
